@@ -17,4 +17,8 @@ jobs:
         container:
             image: ${{ matrix.image }}
         steps:
-            - run: echo ${{ matrix.image }}
+            - run: |
+                dnf update -y && \
+                dnf install -y libicu-devel make cmake3 automake libtool gcc gcc-c++ wget tar \
+                    gzip zip libcurl-devel zlib-static libpng-static xz git python python-devel \
+                    bzip2-devel which gd-devel
