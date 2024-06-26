@@ -14,6 +14,8 @@ jobs:
           matrix:
             image: 
                 - amazonlinux:2023
+            audiowaveform:
+                - 1.10.1
         container:
             image: ${{ matrix.image }}
         steps:
@@ -95,10 +97,12 @@ jobs:
                 ./b2 --disable-icu --with-program_options --with-filesystem --with-system --with-regex link=static install
             - name: Install audiowaveform
               run: |
-                wget https://github.com/bbc/audiowaveform/archive/1.10.1.tar.gz && \
-                tar xzf 1.10.1.tar.gz && \
-                cd ./audiowaveform-1.10.1 && \
+                wget https://github.com/bbc/audiowaveform/archive/${{ matrix.audiowaveform }}.tar.gz && \
+                tar xzf ${{ matrix.audiowaveform }}.tar.gz && \
+                cd ./audiowaveform-${{ matrix.audiowaveform }} && \
                 mkdir ./build && \
                 cd ./build && \
                 cmake3 -D ENABLE_TESTS=0 -D CMAKE_BUILD_TYPE=Release -D BUILD_STATIC=1 .. && \
                 cmake --build . --config Release
+            - name: Test audiowaveform
+              run: ./audiowaveform-${{ matrix.audiowaveform }}/build/audiowaveform --help
