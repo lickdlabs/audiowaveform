@@ -1,0 +1,17 @@
+---
+
+name: CI/CD
+on:
+    push:
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            image: [amazonlinux:2023]
+        container:
+            image: ${{ matrix.image }}
