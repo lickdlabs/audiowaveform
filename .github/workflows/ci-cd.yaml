@@ -113,8 +113,8 @@ jobs:
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
-                name: ${{ matrix.audiowaveform }}-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
-                path: ./audiowaveform-${{ matrix.audiowaveform }}/build/audiowaveform
+                name: ${{ env.AUDIOWAVEFORM_VERSION }}-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
+                path: ./audiowaveform-${{ env.AUDIOWAVEFORM_VERSION }}/build/audiowaveform
                 if-no-files-found: error
                 retention-days: 1
     test:
