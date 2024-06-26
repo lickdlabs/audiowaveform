@@ -17,8 +17,17 @@ jobs:
         container:
             image: ${{ matrix.image }}
         steps:
-            - run: |
+            - name: Install dependencies
+              run: |
                 dnf update -y && \
                 dnf install -y libicu-devel make cmake3 automake libtool gcc gcc-c++ wget tar \
                     gzip zip libcurl-devel zlib-static libpng-static xz git python python-devel \
                     bzip2-devel which gd-devel
+            - name: Install libid3tag
+              run: |
+                wget http://sourceforge.net/projects/mad/files/libid3tag/0.15.1b/libid3tag-0.15.1b.tar.gz && \
+                tar xzf libid3tag-0.15.1b.tar.gz && \
+                cd libid3tag-0.15.1b && \
+                ./configure --enable-static --libdir=/lib64 --build=aarch64-unknown-linux-gnu && \
+                make && \
+                make install
