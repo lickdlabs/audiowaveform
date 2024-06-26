@@ -159,5 +159,5 @@ jobs:
               uses: ncipollo/release-action@v1
               with:
                 allowUpdates: true
-                artifacts: "${{ env.AUDIOWAVEFORM_VERSION }}-*"
+                artifacts: "audiowaveform-*"
                 tag: ${{ env.AUDIOWAVEFORM_VERSION }}
