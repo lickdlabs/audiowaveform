@@ -31,3 +31,12 @@ jobs:
                 ./configure --enable-static --libdir=/lib64 --build=aarch64-unknown-linux-gnu && \
                 make && \
                 make install
+            - name: Install libmad
+              run: |
+                wget https://netix.dl.sourceforge.net/project/mad/libmad/0.15.1b/libmad-0.15.1b.tar.gz && \
+                tar xzf libmad-0.15.1b.tar.gz && \
+                cd libmad-0.15.1b && \
+                sed -i 's/ -fforce-mem//' configure && \
+                ./configure --disable-shared --libdir=/lib64 --build=aarch64-unknown-linux-gnu && \
+                make install
+
