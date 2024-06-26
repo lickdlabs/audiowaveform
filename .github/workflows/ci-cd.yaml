@@ -141,10 +141,10 @@ jobs:
               with:
                 name: ${{ env.AUDIOWAVEFORM_VERSION }}-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
             - name: Update permissions
-              run: chmod +x ./audiowaveform
+              run: chmod +x ./audiowaveform-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
             - run: ls -la
             - name: Test audiowaveform
-              run: ./audiowaveform --help
+              run: ./audiowaveform-${{ steps.gen_image_name.outputs.IMAGE_NAME }} --help
     release:
         name: Release
         needs: test
