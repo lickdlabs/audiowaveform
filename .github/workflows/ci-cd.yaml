@@ -24,7 +24,7 @@ jobs:
               id: gen_image_name
               env:
                 IMAGE: ${{ matrix.image }}
-              run: echo "IMAGE_NAME=${IMAGE//:/-}" >> $GITHUB_OUTPUT
+              run: echo "IMAGE_NAME=${IMAGE//[\/:]/-}" >> $GITHUB_OUTPUT
             - env:
                 IMAGE_NAME: ${{ steps.gen_image_name.outputs.IMAGE_NAME }}
               run: echo "${IMAGE_NAME}"
