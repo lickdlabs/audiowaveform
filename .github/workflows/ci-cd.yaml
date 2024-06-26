@@ -6,6 +6,8 @@ on:
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
+env:
+    AUDIOWAVEFORM_VERSION: 1.10.1
 jobs:
     build:
         name: Build
@@ -15,8 +17,6 @@ jobs:
             image: 
                 - amazonlinux:2023
                 - amazon/aws-lambda-nodejs:20
-            audiowaveform:
-                - 1.10.1
         container:
             image: ${{ matrix.image }}
         steps:
@@ -103,9 +103,9 @@ jobs:
                 ./b2 --disable-icu --with-program_options --with-filesystem --with-system --with-regex link=static install
             - name: Install audiowaveform
               run: |
-                wget https://github.com/bbc/audiowaveform/archive/${{ matrix.audiowaveform }}.tar.gz && \
-                tar xzf ${{ matrix.audiowaveform }}.tar.gz && \
-                cd ./audiowaveform-${{ matrix.audiowaveform }} && \
+                wget https://github.com/bbc/audiowaveform/archive/${{ env.AUDIOWAVEFORM_VERSION }}.tar.gz && \
+                tar xzf ${{ env.AUDIOWAVEFORM_VERSION }}.tar.gz && \
+                cd ./audiowaveform-${{ env.AUDIOWAVEFORM_VERSION }} && \
                 mkdir ./build && \
                 cd ./build && \
                 cmake3 -D ENABLE_TESTS=0 -D CMAKE_BUILD_TYPE=Release -D BUILD_STATIC=1 .. && \
@@ -126,8 +126,6 @@ jobs:
                 image: 
                     - amazonlinux:2023
                     - amazon/aws-lambda-nodejs:20
-                audiowaveform:
-                    - 1.10.1
         container:
             image: ${{ matrix.image }}
         steps:
@@ -139,7 +137,7 @@ jobs:
             - name: Download artifacts
               uses: actions/download-artifact@v4
               with:
-                name: ${{ matrix.audiowaveform }}-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
+                name: ${{ env.AUDIOWAVEFORM_VERSION }}-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
             - name: Update permissions
               run: chmod +x ./audiowaveform
             - run: ls -la
@@ -153,3 +151,9 @@ jobs:
             - name: Download artifacts
               uses: actions/download-artifact@v4
             - run: ls -la
+            - uses: ncipollo/release-action@v1
+              with:
+                allowUpdates: true
+                artifacts: "${{ env.AUDIOWAVEFORM_VERSION }}-*"
+                name: ${{ env.AUDIOWAVEFORM_VERSION }}
+                replacesArtifacts: true
