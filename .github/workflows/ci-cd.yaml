@@ -110,11 +110,13 @@ jobs:
                 cd ./build && \
                 cmake3 -D ENABLE_TESTS=0 -D CMAKE_BUILD_TYPE=Release -D BUILD_STATIC=1 .. && \
                 cmake --build . --config Release
+            - name: Move and rename audiowaveform
+              run: mv ./audiowaveform-${{ env.AUDIOWAVEFORM_VERSION }}/build/audiowaveform ./audiowaveform-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
                 name: ${{ env.AUDIOWAVEFORM_VERSION }}-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
-                path: ./audiowaveform-${{ env.AUDIOWAVEFORM_VERSION }}/build/audiowaveform
+                path: ./audiowaveform-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
                 if-no-files-found: error
                 retention-days: 1
     test:
@@ -150,11 +152,12 @@ jobs:
         steps:
             - name: Download artifacts
               uses: actions/download-artifact@v4
+              with:
+                merge-multiple: true
             - run: ls -la
-            - uses: ncipollo/release-action@v1
+            - name: Create/update release
+              uses: ncipollo/release-action@v1
               with:
                 allowUpdates: true
                 artifacts: "${{ env.AUDIOWAVEFORM_VERSION }}-*"
-                name: ${{ env.AUDIOWAVEFORM_VERSION }}
-                replacesArtifacts: true
                 tag: ${{ env.AUDIOWAVEFORM_VERSION }}
