@@ -118,7 +118,7 @@ jobs:
               env:
                 IMAGE_NAME: ${{ steps.gen_image_name.outputs.IMAGE_NAME }}
               with:
-                name: ${{ matrix.audiowaveform }}-${IMAGE_NAME}
+                name: ${{ matrix.audiowaveform }}-${{ env.IMAGE_NAME }}
                 path: ./audiowaveform-${{ matrix.audiowaveform }}/build/audiowaveform
                 if-no-files-found: error
                 retention-days: 1
