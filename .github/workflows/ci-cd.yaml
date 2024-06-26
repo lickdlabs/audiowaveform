@@ -20,6 +20,9 @@ jobs:
         container:
             image: ${{ matrix.image }}
         steps:
+            - id: gen_image_name
+              name: Generate image name
+              run: echo "IMAGE_NAME=${${{ matrix.image }}//[\/:]/-}" >> $GITHUB_OUTPUT
             - name: Install dependencies
               run: |
                 dnf update -y && \
@@ -110,7 +113,7 @@ jobs:
             - name: Upload artifact
               uses: actions/upload-artifact@v3
               env:
-                imageName: ${${{ matrix.image }}//[\/:]/-}
+                imageName: ${{ steps.gen_image_name.outputs.IMAGE_NAME }}
               with:
                 name: ${{ matrix.audiowaveform }}-${{ env.imageName }}
                 path: ./audiowaveform-${{ matrix.audiowaveform }}/build/audiowaveform
