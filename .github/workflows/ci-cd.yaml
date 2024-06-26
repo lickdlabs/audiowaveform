@@ -157,3 +157,4 @@ jobs:
                 artifacts: "${{ env.AUDIOWAVEFORM_VERSION }}-*"
                 name: ${{ env.AUDIOWAVEFORM_VERSION }}
                 replacesArtifacts: true
+                tag: ${{ env.AUDIOWAVEFORM_VERSION }}
