@@ -15,3 +15,5 @@ jobs:
             image: [amazonlinux:2023]
         container:
             image: ${{ matrix.image }}
+        steps:
+            - run: echo ${{ matrix.image }}
