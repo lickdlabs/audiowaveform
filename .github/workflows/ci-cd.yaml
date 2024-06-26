@@ -115,15 +115,38 @@ jobs:
             #   run: ./audiowaveform-${{ matrix.audiowaveform }}/build/audiowaveform --help
             - name: Upload artifact
               uses: actions/upload-artifact@v4
-              env:
-                IMAGE_NAME: ${{ steps.gen_image_name.outputs.IMAGE_NAME }}
               with:
-                name: ${{ matrix.audiowaveform }}-${{ env.IMAGE_NAME }}
+                name: ${{ matrix.audiowaveform }}-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
                 path: ./audiowaveform-${{ matrix.audiowaveform }}/build/audiowaveform
                 if-no-files-found: error
                 retention-days: 1
+    test:
+        name: Test
+        needs: build
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                image: 
+                    - amazonlinux:2023
+                    - amazon/aws-lambda-nodejs:20
+                audiowaveform:
+                    - 1.10.1
+        container:
+            image: ${{ matrix.image }}
+        steps:
+            - name: Generate image name
+              id: gen_image_name
+              env:
+                IMAGE: ${{ matrix.image }}
+              run: echo "IMAGE_NAME=${IMAGE//[\/:]/-}" >> $GITHUB_OUTPUT
+            - name: Download artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: ${{ matrix.audiowaveform }}-${{ steps.gen_image_name.outputs.IMAGE_NAME }}
     # release:
-    #     name: Build
+    #     name: Release
     #     runs-on: ubuntu-latest
     #     steps:
+    #         - name: Download artifacts
+    #           uses: actions/download-artifact@v4
             
