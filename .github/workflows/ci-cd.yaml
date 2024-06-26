@@ -14,6 +14,7 @@ jobs:
           matrix:
             image: 
                 - amazonlinux:2023
+                - amazon/aws-lambda-nodejs:18
                 - amazon/aws-lambda-nodejs:20
             audiowaveform:
                 - 1.10.1
@@ -107,3 +108,10 @@ jobs:
                 cmake --build . --config Release
             - name: Test audiowaveform
               run: ./audiowaveform-${{ matrix.audiowaveform }}/build/audiowaveform --help
+            - name: Upload artifact
+              uses: actions/upload-artifact@v3
+              with:
+                name: ${{ matrix.audiowaveform }}-${{ matrix.image }}
+                path: ./audiowaveform-${{ matrix.audiowaveform }}/build/audiowaveform
+                if-no-files-found: error
+                retention-days: 1
